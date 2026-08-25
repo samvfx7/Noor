@@ -1,0 +1,7 @@
+{
+  "name": "Noor",
+  "description": "A modern, privacy-focused Muslim prayer companion featuring offline prayer times calculation, advanced Fajr alarm with on-device Prayer Mat camera recognition and wake-up challenges, Qibla compass, full Quran reader, Adhkar, Duas, prayer tracking, and Hijri calendar.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

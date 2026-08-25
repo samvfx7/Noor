@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+        android:translateX="21.6"
+        android:translateY="21.6">
+        <!-- Golden Crescent Moon -->
+        <path
+            android:fillColor="#E5A93C"
+            android:pathData="M52,24 C36.5,24 24,36.5 24,52 C24,67.5 36.5,80 52,80 C60.2,80 67.5,76.5 72.8,70.8 C58.5,70.2 47,58.4 47,44 C47,35.8 51,28.5 57.2,24.2 C55.5,24.1 53.8,24 52,24 Z" />
+        <!-- Radiant Star -->
+        <path
+            android:fillColor="#F6C869"
+            android:pathData="M64,32 L66.5,39.5 L74,42 L66.5,44.5 L64,52 L61.5,44.5 L54,42 L61.5,39.5 Z" />
+        <path
+            android:fillColor="#F6C869"
+            android:pathData="M78,20 L79.5,24.5 L84,26 L79.5,27.5 L78,32 L76.5,27.5 L72,26 L76.5,24.5 Z" />
+    </group>
+</vector>
