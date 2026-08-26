@@ -56,10 +56,10 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.TIMEZONE_CHANGED" />
                 <action android:name="android.intent.action.TIME_SET" />
-                <action android:name="com.example.ACTION_PRAYER_ALARM" />
-                <action android:name="com.example.ACTION_PRAYER_TIME_TRIGGER" />
-                <action android:name="com.example.ACTION_FAJR_ALARM" />
-                <action android:name="com.example.ACTION_SNOOZE_ALARM" />
+                <action android:name="com.samvfx7.noor.ACTION_PRAYER_ALARM" />
+                <action android:name="com.samvfx7.noor.ACTION_PRAYER_TIME_TRIGGER" />
+                <action android:name="com.samvfx7.noor.ACTION_FAJR_ALARM" />
+                <action android:name="com.samvfx7.noor.ACTION_SNOOZE_ALARM" />
             </intent-filter>
         </receiver>
 
@@ -67,8 +67,8 @@
             android:name=".service.PrayerLoggingReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.example.ACTION_QUICK_LOG_PRAYER" />
-                <action android:name="com.example.ACTION_SNOOZE_NOTIFICATION" />
+                <action android:name="com.samvfx7.noor.ACTION_QUICK_LOG_PRAYER" />
+                <action android:name="com.samvfx7.noor.ACTION_SNOOZE_NOTIFICATION" />
             </intent-filter>
         </receiver>
 
