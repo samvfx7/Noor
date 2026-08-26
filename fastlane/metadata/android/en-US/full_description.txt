@@ -1,0 +1,16 @@
+Noor is a modern, privacy-first, 100% offline-capable Muslim prayer companion engineered specifically for Free and Open Source Software (FOSS) standards.
+
+<b>Key Features:</b>
+• <b>Astronomical Prayer Times:</b> 100% offline calculation using spherical trigonometry and standard calculation methods (Umm Al-Qura, ISNA, Muslim World League, Egyptian General Authority, Karachi, Tehran/Jafari). Supports high-latitude rules and Asr madhhab calculation (Shafi/Hanbali/Maliki vs. Hanafi).
+• <b>Next-Gen Fajr Alarm:</b> Features live camera-based Prayer Mat Recognition requiring you to point your camera at your registered physical prayer rug to dismiss the alarm, plus mental alertness challenges (Math, Memory sequences, and brisk movement).
+• <b>Qibla Direction:</b> Real-time compass heading directly to the Holy Ka'aba in Makkah utilizing native device geomagnetic and rotation vector sensors with zero remote network calls.
+• <b>Noble Quran:</b> Full offline Quran with Uthmani Arabic script, English translations, Juz and Surah indices, bookmarking, and search.
+• <b>Supplications & Adhkar:</b> Morning, Evening, and Post-Salah Adhkar with an interactive digital Tasbih counter and vibration feedback.
+• <b>Prayer Tracker:</b> Log your daily Salah directly on-device with zero accounts or cloud databases.
+
+<b>Privacy & FOSS Principles:</b>
+• Zero Google Play Services, Firebase, or proprietary closed-source SDKs
+• Zero advertising, analytics, crash reporting, or telemetry
+• Zero account creation or personal data collection
+• All calculations and computer vision processing run strictly on your device
+• Licensed under the Apache License 2.0

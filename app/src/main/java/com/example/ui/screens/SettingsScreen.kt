@@ -30,15 +30,19 @@ import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -438,44 +442,148 @@ fun SettingsScreen(
 
     // City Selection Dialog
     if (showCityPicker) {
+        var showCustomCoordInput by remember { mutableStateOf(false) }
+        var customCityName by remember { mutableStateOf(settings.cityName) }
+        var customLat by remember { mutableStateOf(settings.latitude.toString()) }
+        var customLon by remember { mutableStateOf(settings.longitude.toString()) }
+        var customTz by remember { mutableStateOf(settings.timezoneOffsetHours.toString()) }
+        var statusMessage by remember { mutableStateOf<String?>(null) }
+
         AlertDialog(
             onDismissRequest = { showCityPicker = false },
-            title = { Text("Select Location", fontWeight = FontWeight.Bold) },
+            title = { Text(if (showCustomCoordInput) "Custom Coordinates" else "Select Location", fontWeight = FontWeight.Bold) },
             text = {
-                LazyColumn(
-                    modifier = Modifier.height(350.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    items(PrayerCalculationEngine.DEFAULT_CITIES) { city ->
-                        val isSelected = settings.cityName == city.cityName
-                        Card(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    viewModel.setLocation(city)
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    if (statusMessage != null) {
+                        Text(
+                            text = statusMessage!!,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
+
+                    if (showCustomCoordInput) {
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            OutlinedTextField(
+                                value = customCityName,
+                                onValueChange = { customCityName = it },
+                                label = { Text("Location Name") },
+                                modifier = Modifier.fillMaxWidth(),
+                                singleLine = true
+                            )
+                            OutlinedTextField(
+                                value = customLat,
+                                onValueChange = { customLat = it },
+                                label = { Text("Latitude (e.g. 21.4225)") },
+                                modifier = Modifier.fillMaxWidth(),
+                                singleLine = true
+                            )
+                            OutlinedTextField(
+                                value = customLon,
+                                onValueChange = { customLon = it },
+                                label = { Text("Longitude (e.g. 39.8262)") },
+                                modifier = Modifier.fillMaxWidth(),
+                                singleLine = true
+                            )
+                            OutlinedTextField(
+                                value = customTz,
+                                onValueChange = { customTz = it },
+                                label = { Text("Timezone Offset Hours (e.g. 3.0)") },
+                                modifier = Modifier.fillMaxWidth(),
+                                singleLine = true
+                            )
+                            Button(
+                                onClick = {
+                                    val lat = customLat.toDoubleOrNull() ?: settings.latitude
+                                    val lon = customLon.toDoubleOrNull() ?: settings.longitude
+                                    val tz = customTz.toDoubleOrNull() ?: settings.timezoneOffsetHours
+                                    settings.cityName = customCityName.ifBlank { "Custom" }
+                                    settings.countryName = ""
+                                    settings.latitude = lat
+                                    settings.longitude = lon
+                                    settings.timezoneOffsetHours = tz
+                                    viewModel.refreshAllData()
                                     showCityPicker = false
                                 },
-                            colors = CardDefaults.cardColors(
-                                containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
-                            )
-                        ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(12.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                                modifier = Modifier.fillMaxWidth()
                             ) {
-                                Text(
-                                    text = "${city.cityName}, ${city.country}",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
-                                )
-                                Text(
-                                    text = "${city.latitude.toInt()}°, ${city.longitude.toInt()}°",
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
+                                Text("Save Coordinates")
+                            }
+                            TextButton(
+                                onClick = { showCustomCoordInput = false },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                Text("Back to City Presets")
+                            }
+                        }
+                    } else {
+                        Button(
+                            onClick = {
+                                viewModel.detectAndSetDeviceLocation { success, msg ->
+                                    statusMessage = msg
+                                    if (success) {
+                                        showCityPicker = false
+                                    }
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                        ) {
+                            Icon(Icons.Default.LocationOn, contentDescription = null, modifier = Modifier.size(18.dp))
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Auto-Detect (AOSP Native GPS)")
+                        }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        OutlinedButton(
+                            onClick = { showCustomCoordInput = true },
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("Enter Custom Lat / Lon Coordinates")
+                        }
+
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text("Or choose city preset:", style = MaterialTheme.typography.labelMedium)
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        LazyColumn(
+                            modifier = Modifier.height(220.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(PrayerCalculationEngine.DEFAULT_CITIES) { city ->
+                                val isSelected = settings.cityName == city.cityName
+                                Card(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            viewModel.setLocation(city)
+                                            showCityPicker = false
+                                        },
+                                    colors = CardDefaults.cardColors(
+                                        containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceVariant
+                                    )
+                                ) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(12.dp),
+                                        horizontalArrangement = Arrangement.SpaceBetween,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        Text(
+                                            text = "${city.cityName}, ${city.country}",
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                                        )
+                                        Text(
+                                            text = "${city.latitude.toInt()}°, ${city.longitude.toInt()}°",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
+                                }
                             }
                         }
                     }

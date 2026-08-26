@@ -550,6 +550,25 @@ class PrayerViewModel(application: Application) : AndroidViewModel(application) 
         refreshAllData()
     }
 
+    fun detectAndSetDeviceLocation(onResult: (Boolean, String) -> Unit = { _, _ -> }) {
+        viewModelScope.launch {
+            val result = com.example.service.NativeLocationHelper.getBestNativeLocation(getApplication())
+            if (result != null) {
+                settings.latitude = result.latitude
+                settings.longitude = result.longitude
+                settings.cityName = result.cityName
+                if (result.countryName.isNotBlank()) {
+                    settings.countryName = result.countryName
+                }
+                settings.timezoneOffsetHours = result.timezoneOffsetHours
+                refreshAllData()
+                onResult(true, "Updated location to ${result.cityName}")
+            } else {
+                onResult(false, "Could not obtain GPS/Network location. Please select city manually.")
+            }
+        }
+    }
+
     fun updateCalculationMethod(method: CalculationMethod) {
         settings.calculationMethod = method
     }
